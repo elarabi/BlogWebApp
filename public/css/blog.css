@@ -1,0 +1,10 @@
+html { overflow-y:scroll; }
+body { width:1000px; margin: 20px auto;}
+#articles-list { margin-bottom:30px; }
+#article-form  { margin-bottom:50px; }
+aside.col-lg-3 h3, .col-lg-6 h3, .col-lg-6 h4 
+{margin-top: 0px;}
+.input-group label {display: block;}
+.input-element-lg {width:375px;}
+select.input-element-lg {width:275px;}
+.input-element-date{width:100px;}
