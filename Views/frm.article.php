@@ -9,7 +9,7 @@
                     <input type="hidden" ng-model="article.Details.author">
                     <select aria-label="Article-Writer" placeholder="Write by" class="input-element-lg">
                      <option>N/S</option>
-                     <option ng-repeat="usr in users " ng-selected="usr.id == article.Details.author">{{usr.name}}-{{usr.role}}</option>
+                     <option ng-repeat="usr in users  | filter:{role:'writer'}:true " ng-selected="usr.id == article.Details.author">{{usr.name}}-{{usr.role}}</option>
                    </select>
                 </div>
             </div>
