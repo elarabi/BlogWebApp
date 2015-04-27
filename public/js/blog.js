@@ -143,7 +143,15 @@ app.controller('blogCtrl',['$scope', '$http', 'menuItems', 'articlesList','users
         $scope.articleComments = this.Details.comments;
         console.log('show article details....of #',$scope.article);
      };
-    $scope.article.add = function(){console.log('Add Function...');};
+    $scope.article.add = function(){
+   	       $scope.articles.push({title: $scope.article.Details.title, 
+   	                               url: '/article/'+($scope.articles.length*100),
+                               publishedon: new Date(),
+                                    author: $scope.user.Info.id,description:$scope.article.Details.description,
+                                  comments:[]
+                  	       });
+    	console.log('Add Function...');
+    };
     
     $scope.article.edit = function(){
 		var idx = $scope.article.Details.id;
