@@ -25,34 +25,20 @@ app.factory('usersList',function(){
 });
 
 app.factory('articlesList',function(){
-   var articles = [    
-               {title: 'article-01', url: '/article/1',publishedon:'2015-Jan-01', id: 1, author:102,comments:[]},
-               {title: 'article-02', url: '/article/2',publishedon:'2015-Feb-02', id: 2, author:100,comments:[]},
-               {title: 'article-03', url: '/article/3',publishedon:'2015-Mar-03', id: 3, author:100,comments:[]},
-               {title: 'article-04', url: '/article/4',publishedon:'2015-Apl-04', id: 4, author:103,comments:[]},
-               {title: 'article-05', url: '/article/5',publishedon:'2015-Apl-05', id: 5, author:102,comments:[]},
-               {title: 'article-06', url: '/article/1',publishedon:'2015-Jan-31', id: 6, author:102,comments:[]},
-               {title: 'article-07', url: '/article/2',publishedon:'2015-Feb-22', id: 7, author:100,comments:[]},
-               {title: 'article-08', url: '/article/3',publishedon:'2015-Mar-13', id: 8, author:100,comments:[]},
-               {title: 'article-09', url: '/article/4',publishedon:'2015-Apl-14', id: 9, author:103,comments:[]},
-               {title: 'article-10', url: '/article/5',publishedon:'2015-Apl-15', id: 10, author:102,comments:[]},
+   var articles = [
+               {title: 'article-01', contents: 'desc of the article-10', url: '/article/1', publishedon:'2015-Jan-01', id:  1, author:102, comments:[]},
+               {title: 'article-02', contents: 'desc of the article-10', url: '/article/2', publishedon:'2015-Feb-02', id:  2, author:100, comments:[]},
+               {title: 'article-03', contents: 'desc of the article-10', url: '/article/3', publishedon:'2015-Mar-03', id:  3, author:100, comments:[]},
+               {title: 'article-04', contents: 'desc of the article-10', url: '/article/4', publishedon:'2015-Apl-04', id:  4, author:103, comments:[]},
+               {title: 'article-05', contents: 'desc of the article-10', url: '/article/5', publishedon:'2015-Apl-05', id:  5, author:102, comments:[]},
+               {title: 'article-06', contents: 'desc of the article-10', url: '/article/1', publishedon:'2015-Jan-31', id:  6, author:102, comments:[]},
+               {title: 'article-07', contents: 'desc of the article-10', url: '/article/2', publishedon:'2015-Feb-22', id:  7, author:100, comments:[]},
+               {title: 'article-08', contents: 'desc of the article-10', url: '/article/3', publishedon:'2015-Mar-13', id:  8, author:100, comments:[]},
+               {title: 'article-09', contents: 'desc of the article-10', url: '/article/4', publishedon:'2015-Apl-14', id:  9, author:103, comments:[]},
+               {title: 'article-10', contents: 'desc of the article-10', url: '/article/5', publishedon:'2015-Apl-15', id: 10, author:102, comments:[]},
     ];
    return articles;
-    //$http({method: 'GET', url: '/todo/list'})
-    $http.get('/articles').
-       success(function(data, status, headers, config){
-       
-         console.log('Get articles-list .'+data.length+'.. ');
-         return data;
-      
-  }).
-   error(function(data, status, headers, config) {
-    // called asynchronously if an error occurs or server returns response with an error status.
-   console.log('Oops an error occurse will looking to get the articles list!', data);
-   data = []; // Return an empty array
-    return data;
-  });
-return articles;
+    
 });
 
 app.controller('blogCtrl',['$scope', '$http', 'menuItems', 'articlesList','usersList',
@@ -60,11 +46,44 @@ app.controller('blogCtrl',['$scope', '$http', 'menuItems', 'articlesList','users
     $scope.menuItems = menuItems;
     $scope.articles = articlesList;
     $scope.users = usersList;
+	$scope.articleComments = [];
     $scope.newComment = new Object();
     $scope.newComment.message = '';
     $scope.newComment.save= function(){
-        $scope.articleComments.push({message:this.message,author:$scope.user.Info.id});
+		var usr = $scope.user.Info.id;
+		var idx = $scope.article.Details.id;
+		
+		var artComments = $scope.articles[idx -1].comments;
+
+		var msg = this.message + '(By #' + usr + 'On #' + idx + ')';
+        
+		$scope.articleComments.push({message:msg, author:usr});
+		
+		artComments.push({'message': msg, 'author': usr});
+		
+		console.log($scope.articles[idx].comments);
     };
+	$scope.newComment.del= function(idx){
+			console.log(' Delete Comment  : ' + idx) 
+			var arLeft = $scope.articleComments.slice(0, idx );
+			var arRight = $scope.articleComments.slice(idx+1, $scope.articleComments.length+1);
+			$scope.articleComments = arLeft.concat(arRight);
+			console.log(arRight);
+	};
+	$scope.newComment.isAuthor = function(){
+			if(this.authore && $scope.user.Info.id && this.authore == $scope.user.Info.id) 
+				return true;
+			else 
+				return false;
+	};
+	$scope.newComment.isOwner = function(){
+			if($scope.article.Details.author && $scope.user.Info.id && $scope.article.Details.authore == $scope.user.Info.id) 
+				return true;
+			else 
+				return false;
+	};
+	
+	
  //Article Model
  $scope.article = new Object();
 //User Model
@@ -72,19 +91,20 @@ app.controller('blogCtrl',['$scope', '$http', 'menuItems', 'articlesList','users
     //Default user is the guest
     $scope.user.Info = $scope.users[0];
     $scope.user.isWriter = function(){
-            if( this.Info && this.Info.role == 'writer')
+            if( this.Info && this.Info.role === 'writer')
                 return true;
             else 
                 return false;
         };
+    //2Be used for the comment on the post
     $scope.user.isAuthor = function(post){
-        if(this.Info && this.Info.role == 'writer' && this.Info.id == post.author)
+        if(this.Info  && this.Info.id === post.author)
             return true;
         else 
             return false;
     };
     $scope.user.isOwner = function(post){
-            if( this.Info && this.Info.role == 'writer' && this.Info.id == post.author) 
+            if( this.Info && this.Info.role === 'writer' && this.Info.id === post.author) 
               {return true} 
             else {
                 return false;
@@ -106,14 +126,19 @@ app.controller('blogCtrl',['$scope', '$http', 'menuItems', 'articlesList','users
          $scope.postDetails = angular.copy($scope.articles[idx]);
         this.Details = angular.copy($scope.articles[idx]);//angular.copy(post);//
         $scope.articleComments = this.Details.comments;
-        $scope.articleComments.push({message:'show article details....of By'+$scope.userInfo.id,author:$scope.user.Info.id});
         console.log('show article details....of #',$scope.article);
      };
-    $scope.article.add = function(){console.log('Add Function..');};
+    $scope.article.add = function(){console.log('Add Function...');};
     
-    $scope.article.edit = function(){console.log('Edit Function..');};
+    $scope.article.edit = function(){
+		var idx = $scope.article.Details.id;
+		var art = $scope.articles[idx -1];
+		 art.title = $scope.article.Details.title;
+		 art.description = $scope.article.Details.description;
+		console.log('Edit Function...');
+		};
     
-    $scope.article.del = function(){console.log('Del Function..');};
+    $scope.article.del = function(){console.log('Del Function...');};
     
     $scope.article.clear = function(){
         console.log('Clear Function..');

@@ -13,7 +13,7 @@
 <body data-ng-app="blogApp" data-ng-controller="blogCtrl">
 <header>
 <div class="row">
-   <h2 class="col-lg-6 pull-left"><i class="glyphicon glyphicon-education"></i>Blog Wep App Sample Project</h2>
+   <h2 class="col-lg-6 pull-left"><i class="glyphicon glyphicon-education"></i>Blog Wep App</h2>
    <div class="col-lg-6 pull-right">
    </div>
 </div>
@@ -27,10 +27,10 @@
 <div>{{user.Info.role}}#{{user.Info.id}}-Welcome ! Dear! {{user.Info.name}}</div>
 <aside class="col-lg-3 pull-left">
     <div class="panel panel-primary ">
-        <h3 class="panel-heading" ><span class="panel-title"><i class="glyphicon glyphicon-list-alt"></i> Brows Articles <span>{{articles.length}}</span></span></h3>
+        <h3 class="panel-heading" ><span class="panel-title"><i class="glyphicon glyphicon-list-alt"></i> Articles <span>{{articles.length}}</span></span></h3>
 <ul  class="panel-body list-group">
  <li  class="list-group-item" data-ng-repeat="art in articles">
-     <i class="glyphicon glyphicon-flag" ng-show="art.id == article.Details.id"></i>
+     <i class="glyphicon glyphicon-flag" ng-show="user.isOwner(art)"></i>
      <a href="#" data-ng-click="article.show($index)">{{art.publishedon}} {{art.title}}</a>
  </li>
  <li  class="list-group-item" data-ng-show="articles.length <1 ">Sorry There is No Article Published at this time!!</li>
@@ -70,46 +70,63 @@
         <div class="row">
             <div class="input-group">
                 <label>Description</label>
-                <textarea name="description"  data-ng-model="article.Details.description" class="input-element-lg" cols="60" rows="10" required></textarea>
+                <textarea name="contents"  data-ng-model="article.Details.contents" class="input-element-lg" cols="60" rows="10" required></textarea>
             </div>
         </div>
         <br>
         <footer>
             <div class="row" data-ng-show="user.isWriter()">
-                <button data-ng-click="article.add()" data-ng-hide="user.isOwner(article.Details)" class="btn btn-primary"><i class="glyphicon glyphicon-disk"></i>Add</button>
+                <button data-ng-click="article.add()" data-ng-hide="user.isOwner(article.Details)" class="btn btn-primary"><i class="glyphicon glyphicon-floppy-save"></i>Add</button>
                 <button data-ng-click="article.edit()" data-ng-show="user.isOwner(article.Details)" class="btn btn-primary"><i class="glyphicon glyphicon-pencil"></i>Edit</button>
-                <button data-ng-click="article.del()" data-ng-show="user.isOwner(article.Details)" class="btn btn-danger"><i class="glyphicon glyphicon-pencil"></i>Delete</button>
-                <button data-ng-click="article.clear()" class="btn btn-default" type="reset"><i class="glyphicon glyphicon-pencil"></i>Cancel</button>
+                <button data-ng-click="article.del()" data-ng-show="user.isOwner(article.Details)" class="btn btn-danger"><i class="glyphicon glyphicon-trash"></i>Delete</button>
+                <button data-ng-click="article.clear()" class="btn btn-warning" type="reset"><i class="glyphicon glyphicon-erase"></i>Cancel</button>
             </div>
         </footer>
 </form>
+
 </div>
-    <div class="well well-lg">
-       <h4>Post a comment on this Post</h4>
-       <input type="text" data-ng-model="newComment.message" size="70" class="input-element-lg">
-       <span class="btn btn-primary" data-ng-click="newComment.save()"><i class="glyphicon glyphicon-disk"></i>Post</span>
+    <div class="panel panel-primary">
+        <h3 class="panel-heading">
+		<span class="panel-title"><i class="glyphicon glyphicon-comment"></i> Comments{{articleComments.length}}</span>
+		</h3>
+        <ul  class="panel-body list-group">
+            <li  class="list-group-item" data-ng-repeat="comment in articleComments">
+			<span><i class="glyphicon glyphicon-trash" ng-show="comment.author == user.Info.id || article.Details.author == user.Info.id" ng-click="newComment.del($index)"></i>  
+			<i class="glyphicon glyphicon-pencil" ng-show="comment.author == user.Info.id" ng-click="newComment.edit($index)"></i>
+			</span>
+			#{{comment.author}} {{comment.message}} 			
+			</li>
+            <li class="list-group-item" data-ng-show="(!articleComments || articleComments.length < 1) && article.Details.id >0 ">Be the first commenting this article!!!!</li>
+        </ul>
     </div>
+
 
 </div>
 <aside class="col-lg-3 pull-right">
     <div class="panel panel-primary ">
-        <h3 class="panel-heading" ><span class="panel-title"><i class="glyphicon glyphicon-list-alt"></i> Users </span></h3>
+        <h3 class="panel-heading" >
+		<span class="panel-title"><i class="glyphicon glyphicon-list-alt"></i> Users </span>
+		</h3>
         <ul  class="panel-body list-group">
             <li  class="list-group-item" data-ng-repeat="usr in users">
                 <i class="glyphicon glyphicon-user" ng-show="usr.id == user.Info.id"></i><a href="#/user/:{{usr.id}}" data-ng-click="user.set($index)">{{usr.name}} {{usr.role}}</a>
             </li>
         </ul>
     </div>
-    <div class="panel panel-primary ">
-        <h3 class="panel-heading" ><span class="panel-title"><i class="glyphicon glyphicon-list-alt"></i> Comments{{articleComments.length}}</span></h3>
-        <ul  class="panel-body list-group">
-            <li  class="list-group-item" data-ng-repeat="comment in articleComments">{{comment.message}} ({{comment.author}})</li>
-            <li  class="list-group-item" data-ng-show="!articleComments || articleComments.length < 1 ">Be the first commenting this article!!!!</li>
-        </ul>
+	<div class="panel panel-primary">
+       <h3 class="panel-heading">
+	   <span class="panel-title"><i class="glyphicon glyphicon-comment"></i>Comment on this Post</span>
+	   </h3>
+	   <div class="panel-body list-group">
+       <textarea data-ng-model="newComment.message" class="input-element-message" cols=35 rows=5 required></textarea>
+       <span class="btn btn-primary" data-ng-click="newComment.save()"><i class="glyphicon glyphicon-send"></i>Send</span>
+	   </div>
     </div>
+
+
 </aside>
 </div>
-<footer> </footer>
+<footer> <hr><small>Blog Web App just as a Sample Project Using angularJS </small></footer>
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.min.js"></script>
