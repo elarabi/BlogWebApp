@@ -136,6 +136,7 @@ app.controller('blogCtrl',['$scope', '$http', 'menuItems', 'articlesList','users
     };
 //Article Model
     $scope.article.Details = $scope.articles[0];
+    $scope.article.Details.comments = $scope.articleComments;
    //Show Article Function
     $scope.article.show = function(idx){
          $scope.postDetails = angular.copy($scope.articles[idx]);
