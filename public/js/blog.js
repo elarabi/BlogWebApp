@@ -47,6 +47,21 @@ app.controller('blogCtrl',['$scope', '$http', 'menuItems', 'articlesList','users
     $scope.articles = articlesList;
     $scope.users = usersList;
 	$scope.articleComments = [];
+	$http.get('/api/comments',{responseType:'json'})
+		.success(function(data, status, headers, config) {
+			$scope.articleComments = angular.fromJson(data);
+		})
+		.error(function(data, status, headers, config) {
+			// called asynchronously if an error occurs or server returns response with an error status.
+			console.log('Oops an error occurse will looking to get the articles list!', data);
+			var results = []; // Return an empty array
+		})
+		.then(function(response){
+			console.log(response);		
+		}).finally(function(){
+			console.log('Get Comments Done!');
+		});
+
     $scope.newComment = new Object();
     $scope.newComment.message = '';
     $scope.newComment.save= function(){
