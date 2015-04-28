@@ -148,46 +148,60 @@ app.controller('blogCtrl',['$scope', '$http', 'menuItems', 'articlesList','users
         console.log('Showing User IDX= ',this.Info);
     };
     $scope.article.set = function(idx){
+		this.index = idx;
         this.Details = angular.copy($scope.articles[idx]);
-        console.log('Showing Articles IDX= ',this.Details);
+		$scope.articleComments = this.Details.comments;
+        console.log('Selecting Articles IDX= '+idx,this.Details);
     };
 //Article Model
-    
-    $scope.article.Details = $scope.articles[0];
-    
+    $scope.article.index = 0;    
+    $scope.article.Details = $scope.articles[$scope.article.index];
+
    //Show Article Function
     $scope.article.show = function(idx){
-         $scope.postDetails = angular.copy($scope.articles[idx]);
+        this.index = idx; 
         this.Details = angular.copy($scope.articles[idx]);//angular.copy(post);//
         $scope.articleComments = this.Details.comments;
-        console.log('show article details....of #',$scope.article);
+        console.log('Showing article details....of #'+idx, $scope.article);
      };
     $scope.article.add = function(){
-   	       $scope.articles.push({title: $scope.article.Details.title, 
-   	                               url: '/article/'+($scope.articles.length*100),
-                               publishedon: new Date(),
-                                    author: $scope.user.Info.id,description:$scope.article.Details.description,
-                                  comments:[]
-                  	       });
-    	console.log('Add Function...');
+		   this.index = $scope.articles.length;
+		   var newPost = {title: $scope.article.Details.title, 
+   	                               url: '/article/'+(this.index*100),
+                           publishedon: new Date(),
+                                author: $scope.user.Info.id,
+			                  contents: $scope.article.Details.contents,
+                              comments: []
+                  	       };
+   	       $scope.articles.push(newPost);
+		   $scope.articleComments = newPost.comments;;
+		   
+    	console.log('Add Article Function...#'+this.index);
     };
     
     $scope.article.edit = function(){
-		var idx = $scope.article.Details.id;
-		var art = $scope.articles[idx -1];
-		 art.title = $scope.article.Details.title;
-		 art.description = $scope.article.Details.description;
+		var idx = this.index;
+		if($scope.articles[idx ]){
+			$scope.articles[idx ].title = $scope.article.Details.title;
+			$scope.articles[idx ].contents = $scope.article.Details.contents;
+		}
+		 
 		console.log('Edit Function...');
 		};
     
-    $scope.article.del = function(idx){
+    $scope.article.del = function(){
+		if(!angular.isNumber(this.index)) return;
 		
-			var arLeft = $scope.articles.slice(0, idx );
+		    var idx = this.index;
+			var arLeft = $scope.articles;
+			arLeft = arLeft.slice(0, idx );
 			var arRight = $scope.articles.slice(idx+1, $scope.articles.length+1);
 			$scope.articles = arLeft.concat(arRight);
-			console.log(arRight);
+
+			$scope.article.clear();
+
 			
-			console.log('Del Article Function...');
+			console.log('Del Article Function...#'+	idx);
 		
 		};
     
@@ -198,7 +212,11 @@ app.controller('blogCtrl',['$scope', '$http', 'menuItems', 'articlesList','users
                   publishedOn: '', 
                            id: 0,
                        author: 0,
+					 contents: '',
                       comments:[]};
-    };
+		$scope.articleComments = this.Details.comments;
+		this.index = $scope.articles.length;
+		};
+	
 }]);
 

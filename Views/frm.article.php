@@ -36,7 +36,7 @@
         <footer>
             <div class="row" data-ng-show="user.isWriter()">
                 <button data-ng-click="article.add()" data-ng-hide="user.isOwner(article.Details)" class="btn btn-primary"><i class="glyphicon glyphicon-floppy-save"></i>Add</button>
-                <button data-ng-click="article.edit()" data-ng-show="user.isOwner(article.Details)" class="btn btn-primary"><i class="glyphicon glyphicon-pencil"></i>Edit</button>
+                <button data-ng-click="article.edit()" data-ng-show="user.isOwner(article.Details)" class="btn btn-primary"><i class="glyphicon glyphicon-pencil"></i>Save</button>
                 <button data-ng-click="article.del()" data-ng-show="user.isOwner(article.Details)" class="btn btn-danger"><i class="glyphicon glyphicon-trash"></i>Delete</button>
                 <button data-ng-click="article.clear()" class="btn btn-warning" type="reset"><i class="glyphicon glyphicon-erase"></i>Cancel</button>
             </div>

@@ -86,8 +86,10 @@
 
 
 </aside>
-</div>
-<footer> <hr><small>Blog Web App just as a Sample Project Using angularJS </small></footer>
+</div><hr>
+<footer> 
+<small>Blog Web App just as a sample Project Built with angularJS And Bootstrap. <a href="https://github.com/elarabi/BlogWebApp/">View the GitHub Projrct</a></small>
+ </footer>
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.min.js"></script>
