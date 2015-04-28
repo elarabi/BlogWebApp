@@ -45,11 +45,16 @@
 		</h3>
         <ul  class="panel-body list-group">
             <li  class="list-group-item" data-ng-repeat="comment in articleComments">
+            	<p  ng-hide="comment.editor">
 			<span><i class="glyphicon glyphicon-trash" ng-show="comment.author == user.Info.id || article.Details.author == user.Info.id" ng-click="newComment.del($index)"></i>  
-			<i class="glyphicon glyphicon-pencil" ng-show="comment.author == user.Info.id" ng-click="newComment.edit($index)"></i>
+			<i class="glyphicon glyphicon-pencil" ng-show="comment.author == user.Info.id" ng-click="comment.editor = true"></i>
 			</span>
-			#{{comment.author}} {{comment.message}} 			
-			</li>
+			#{{comment.author}} {{comment.message}}
+		</p>
+		<p ng-show="comment.editor" class="input-group">
+		    <input type=text  ng-model="comment.message" class="form-control input-element-lg" style="width:100%;"><span class="input-group-addon"><i class="glyphicon glyphicon-ok" ng-click="comment.editor = !newComment.edit($index)"></i></span>
+		 </p>
+	    </li>
             <li class="list-group-item" data-ng-show="(!articleComments || articleComments.length < 1) && article.Details.id >0 ">Be the first commenting this article!!!!</li>
         </ul>
     </div>
