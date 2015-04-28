@@ -31,7 +31,7 @@ class Response {
 	
       $options = array(
 		 'Content-type: application/json',
-		 'Content-Length: ' . strlen($this->get()),
+		// 'Content-Length: ' . strlen($this->get()),
 	  );
      	echo json_encode($this->get()); 
     }

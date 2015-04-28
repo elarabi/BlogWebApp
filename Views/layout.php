@@ -60,16 +60,16 @@
 <aside class="col-lg-3 pull-right">
     <div class="panel panel-primary ">
         <h3 class="panel-heading" >
-		<span class="panel-title"><i class="glyphicon glyphicon-list-alt"></i> 
+		<span class="panel-title"> 
 		    <span class="btn-group" role="group" aria-label="...">
-                        <span class="btn btn-info" ng-click=" usersfilter = ''">   <input type="radio" value="" ng-model="usersfilter" checked>All Users</span>
-                        <span class="btn btn-info" ng-click=" usersfilter = 'writer'"> <input type="radio" value="writer" ng-model="usersfilter">Readers</span>
-                        <span class="btn btn-info"  ng-click=" usersfilter = 'reader'">   <input type="radio" value="reader" ng-model="usersfilter">Authors</span>
+                        <span class="btn btn-info" ng-click=" usersfilter = ''">   <input type="radio" value="" ng-model="usersfilter" checked><i class="glyphicon glyphicon-list-alt"></i> All Users</span>
+                        <span class="btn btn-info" ng-click=" usersfilter = 'reader'"> <input type="radio" value="reader" ng-model="usersfilter">Readers</span>
+                        <span class="btn btn-info"  ng-click=" usersfilter = 'writer'">   <input type="radio" value="writer" ng-model="usersfilter">Authors</span>
                     </span>
 		</span>
 	</h3>
         <ul  class="panel-body list-group">
-            <li  class="list-group-item" data-ng-repeat="usr in users">
+            <li  class="list-group-item" data-ng-repeat="usr in users" ng-show="usersfilter == '' || usr.role == usersfilter">
                 <i class="glyphicon glyphicon-user" ng-show="usr.id == user.Info.id"></i><a href="#/user/:{{usr.id}}" data-ng-click="user.set($index)">{{usr.name}} {{usr.role}}</a>
             </li>
         </ul>

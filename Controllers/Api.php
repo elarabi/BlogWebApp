@@ -18,7 +18,12 @@ class Controllers_Api{
         
 	}
 	function main(){
-  	   Response::getInstance()->set( Models_Comments::fetchAll()); 
+		if(Request::getAction() == 'comments') {
+  			Response::getInstance()->set( Models_Comments::fetchAll()); 
+		}
+		else {
+  			Response::getInstance()->set( Models_Articles::fetchAll()); 
+		}
 	   Response::getInstance()->json(); 
 	}
 }

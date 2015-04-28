@@ -44,7 +44,7 @@ class Request {
 			if( preg_match('/\/api\/\w+/i',$_SERVER['REQUEST_URI']) ){
 	            
 				self::$controller = 'Api';
-				unset($params[0]);
+				$apiValue = array_shift($params);
 			
 			} else {
 

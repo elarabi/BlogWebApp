@@ -24,7 +24,7 @@ app.factory('usersList',function(){
    return users;
 });
 
-app.factory('articlesList',function(){
+app.factory('articlesList',['$http', function($http){
    var articles = [
                {title: 'article-01', contents: 'desc of the article-10', url: '/article/1', publishedon:'2015-Jan-01', id:  1, author:102, comments:[]},
                {title: 'article-02', contents: 'desc of the article-10', url: '/article/2', publishedon:'2015-Feb-02', id:  2, author:100, comments:[]},
@@ -37,15 +37,33 @@ app.factory('articlesList',function(){
                {title: 'article-09', contents: 'desc of the article-10', url: '/article/4', publishedon:'2015-Apl-14', id:  9, author:103, comments:[]},
                {title: 'article-10', contents: 'desc of the article-10', url: '/article/5', publishedon:'2015-Apl-15', id: 10, author:102, comments:[]},
     ];
+
    return articles;
     
-});
+}]);
 
 app.controller('blogCtrl',['$scope', '$http', 'menuItems', 'articlesList','usersList',
                             function($scope, $http, menuItems, articlesList, usersList){
     $scope.menuItems = menuItems;
     $scope.articles = articlesList;
-    $scope.users = usersList;
+   $http.get('/api/articles',{responseType:'json'})
+		.success(function(data, status, headers, config) {
+			$scope.articles = angular.fromJson(data);
+			//$scope.articles = angular.fromJson(data);
+		})
+		.error(function(data, status, headers, config) {
+			// called asynchronously if an error occurs or server returns response with an error status.
+			console.log('Oops an error occurse will looking to get the articles list!', data);
+			$scope.articles = []; // Return an empty array
+		})
+		.then(function(response){
+			console.log(response);		
+			   $scope.articles = angular.fromJson(response.data);
+		}).finally(function(){
+			console.log('Get Comments Done!');
+		});
+	$scope.users = usersList;
+	$scope.usersfilter = '';
 	$scope.articleComments = [];
 	$http.get('/api/comments',{responseType:'json'})
 		.success(function(data, status, headers, config) {
@@ -54,7 +72,6 @@ app.controller('blogCtrl',['$scope', '$http', 'menuItems', 'articlesList','users
 		.error(function(data, status, headers, config) {
 			// called asynchronously if an error occurs or server returns response with an error status.
 			console.log('Oops an error occurse will looking to get the articles list!', data);
-			var results = []; // Return an empty array
 		})
 		.then(function(response){
 			console.log(response);		
@@ -135,8 +152,9 @@ app.controller('blogCtrl',['$scope', '$http', 'menuItems', 'articlesList','users
         console.log('Showing Articles IDX= ',this.Details);
     };
 //Article Model
+    
     $scope.article.Details = $scope.articles[0];
-    $scope.article.Details.comments = $scope.articleComments;
+    
    //Show Article Function
     $scope.article.show = function(idx){
          $scope.postDetails = angular.copy($scope.articles[idx]);
@@ -162,7 +180,16 @@ app.controller('blogCtrl',['$scope', '$http', 'menuItems', 'articlesList','users
 		console.log('Edit Function...');
 		};
     
-    $scope.article.del = function(){console.log('Del Function...');};
+    $scope.article.del = function(idx){
+		
+			var arLeft = $scope.articles.slice(0, idx );
+			var arRight = $scope.articles.slice(idx+1, $scope.articles.length+1);
+			$scope.articles = arLeft.concat(arRight);
+			console.log(arRight);
+			
+			console.log('Del Article Function...');
+		
+		};
     
     $scope.article.clear = function(){
         console.log('Clear Function..');
