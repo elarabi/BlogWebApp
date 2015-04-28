@@ -24,7 +24,6 @@
    </nav>
 </header>
 <div class="row app-container">
-<div>{{user.Info.role}}#{{user.Info.id}}-Welcome ! Dear! {{user.Info.name}}</div>
 <aside class="col-lg-3 pull-left">
     <div class="panel panel-primary ">
         <h3 class="panel-heading" ><span class="panel-title"><i class="glyphicon glyphicon-list-alt"></i> Articles <span>{{articles.length}}</span></span></h3>

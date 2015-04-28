@@ -32,7 +32,7 @@ class Request {
     private static function parse(){
         
             $uri = $_SERVER['REQUEST_URI'];
-            $query = $_SERVER['REQUEST_QUERY'];
+            $query = $_SERVER['QUERY_STRING'];
             $path = str_replace('?'.$query, '', $uri);
             $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ?'https':'http';
             $host = $_SERVER['HTTP_HOST'];

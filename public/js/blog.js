@@ -65,7 +65,7 @@ app.controller('blogCtrl',['$scope', '$http', 'menuItems', 'articlesList','users
 	$scope.users = usersList;
 	$scope.usersfilter = '';
 	$scope.articleComments = [];
-	$http.get('/api/comments',{responseType:'json'})
+	/*$http.get('/api/comments',{responseType:'json'})
 		.success(function(data, status, headers, config) {
 			$scope.articleComments = angular.fromJson(data);
 		})
@@ -77,15 +77,15 @@ app.controller('blogCtrl',['$scope', '$http', 'menuItems', 'articlesList','users
 			console.log(response);		
 		}).finally(function(){
 			console.log('Get Comments Done!');
-		});
+		});*/
 
     $scope.newComment = new Object();
     $scope.newComment.message = '';
     $scope.newComment.save= function(){
 		var usr = $scope.user.Info.id;
-		var idx = $scope.article.Details.id;
+		var idx = $scope.article.index;
 		
-		var artComments = $scope.articles[idx -1].comments;
+		var artComments = $scope.articles[idx].comments;
 
 		var msg = this.message + '(By #' + usr + 'On #' + idx + ')';
         
@@ -100,6 +100,8 @@ app.controller('blogCtrl',['$scope', '$http', 'menuItems', 'articlesList','users
 			var arLeft = $scope.articleComments.slice(0, idx );
 			var arRight = $scope.articleComments.slice(idx+1, $scope.articleComments.length+1);
 			$scope.articleComments = arLeft.concat(arRight);
+
+			$scope.articles[$scope.article.index].comments = $scope.articleComments;
 			console.log(arRight);
 	};
 	$scope.newComment.isAuthor = function(){
