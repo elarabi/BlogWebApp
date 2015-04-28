@@ -168,9 +168,12 @@ app.controller('blogCtrl',['$scope', '$http', 'menuItems', 'articlesList','users
      };
     $scope.article.add = function(){
 		   this.index = $scope.articles.length;
+		   var dt = new Date();
+		   var today = dt.getFullYear()+ '-' + dt.getMonth()+ '-' + dt.getDate();
+
 		   var newPost = {title: $scope.article.Details.title, 
-   	                               url: '/article/'+(this.index*100),
-                           publishedon: new Date(),
+   	                               url: '/article/'+(this.index * 100),
+                           publishedon: today,
                                 author: $scope.user.Info.id,
 			                  contents: $scope.article.Details.contents,
                               comments: []
