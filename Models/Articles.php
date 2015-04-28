@@ -40,7 +40,7 @@ class Models_Articles{
 			);
 
 	    $datas[0]['comments'] = $comments;
-		uasort($datas, 'Models_Articles::isOlder');
+		#uasort($datas, 'Models_Articles::isOlder');
 		return $datas;
 	}
 	public static function isOlder($postA, $postB) {
