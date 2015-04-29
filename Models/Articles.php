@@ -11,8 +11,10 @@ class Models_Articles{
 	public static function fetchAll(){
 	
 		$datas = array( 
-			array('title' => 'article-01', 'contents' => 'Summary description of the article-01', 'url' => '/article/1', 
-			      'publishedon' =>date('Y-m-d',mktime(0, 0,0, 1, 1 ,2015)), 'id' =>  1, 'author' =>102, 'comments' =>array()),
+           array('title' => 'article-01', 'contents' => 'Summary description of the article-01', 'url' => '/article/1', 
+			'publishedon' =>date('Y-m-d',mktime(0, 0,0, 1, 1 ,2015)), 'id' =>  1, 'author' =>102, 'comments' =>array()),
+           array('title' => 'article-09', 'contents' => 'Summary description of the article-09', 'url' => '/article/9', 
+			'publishedon' =>date('Y-m-d',mktime(0, 0,0, 4, 14 ,2015)), 'id' =>  9, 'author' =>103, 'comments' => array()),
            array('title' => 'article-02', 'contents' => 'Summary description of the article-02', 'url' => '/article/2',
 			'publishedon' =>date('Y-m-d',mktime(0, 0,0, 2, 2 ,2015)), 'id' =>  2, 'author' =>100, 'comments' =>array()),
 		   array('title' => 'article-03',  'contents' => 'Summary description of the article-03',  'url' => '/article/3',
@@ -27,29 +29,46 @@ class Models_Articles{
 			'publishedon' =>date('Y-m-d',mktime(0, 0,0, 5, 1 ,2015)), 'id' =>  7, 'author' =>100, 'comments' => array()),
            array('title' => 'article-08', 'contents' => 'Summary description of the article-08', 'url' => '/article/8', 
 			'publishedon' =>date('Y-m-d',mktime(0, 0,0, 5, 11 ,2015)), 'id' =>  8, 'author' =>100, 'comments' =>array()),
-               array('title' => 'article-09', 'contents' => 'Summary description of the article-09', 'url' => '/article/9', 
-			'publishedon' =>date('Y-m-d',mktime(0, 0,0, 4, 14 ,2015)), 'id' =>  9, 'author' =>103, 'comments' => array()),
-               array('title' => 'article-10', 'contents' => 'Summary description of the article-10', 'url' => '/article/10', 
+           array('title' => 'article-10', 'contents' => 'Summary description of the article-10', 'url' => '/article/10', 
 			'publishedon' =>date('Y-m-d',mktime(0, 0,0, 6, 21 ,2015)), 'id' =>10, 'author' =>102, 'comments' =>array()),
-    );
-	$comments = array(
+		);
+
+		#Sort Records by dates
+		uasort($datas, array('self', 'isOlder'));
+		#Set the index to send sorted datas
+		$datas = array_values($datas);
+
+		$comments = array(
 			array('message'=>'Message-1 on post-01 by Reader-1 ', 'author' => 101),
 			array('message'=>'Message-2 on post-01 by Author-3 ', 'author' => 103),	 
 			array('message'=>'Message-3 on post-01 by Reader-2 ', 'author' => 104),
 			array('message'=>'Message-4 on post-01 by Owner-Author-2 ', 'author' => 102),
 			);
 
-	    $datas[0]['comments'] = $comments;
-		#uasort($datas, 'Models_Articles::isOlder');
+		$datas[0]['comments'] = $comments;
+
+		$comments = array(
+			array('message'=>'Message-1 on post-05 by Reader-1 ', 'author' => 101),
+			array('message'=>'Message-2 on post-05 by Reader-2 ', 'author' => 104),	 
+			array('message'=>'Message-3 on post-05 by Reader-1 ', 'author' => 101),
+			array('message'=>'Message-4 on post-05 by Reader-2 ', 'author' => 104),
+			);
+
+		$datas[4]['comments'] = $comments;
+		
+
 		return $datas;
 	}
 	public static function isOlder($postA, $postB) {
-		if ($postA['publishedon'] >= $postB['publishedon'])
+
+		if ($postA['publishedon'] > $postB['publishedon'])
 		{
-			return true;
-		}
-		else {
 			return false;
+		}
+		elseif ($postA['publishedon'] < $postB['publishedon']) {
+			return true;
+		} else { //Equal
+			return 0;
 		}
 	}
 }

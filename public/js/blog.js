@@ -45,7 +45,9 @@ app.factory('articlesList',['$http', function($http){
 app.controller('blogCtrl',['$scope', '$http', 'menuItems', 'articlesList','usersList',
                             function($scope, $http, menuItems, articlesList, usersList){
     $scope.menuItems = menuItems;
-    $scope.articles = articlesList;
+    $scope.articles = [];//articlesList;
+	$scope.articleComments = [];
+//Get data from the server and set the articles!
    $http.get('/api/articles',{responseType:'json'})
 		.success(function(data, status, headers, config) {
 			$scope.articles = angular.fromJson(data);
@@ -54,30 +56,17 @@ app.controller('blogCtrl',['$scope', '$http', 'menuItems', 'articlesList','users
 		.error(function(data, status, headers, config) {
 			// called asynchronously if an error occurs or server returns response with an error status.
 			console.log('Oops an error occurse will looking to get the articles list!', data);
-			$scope.articles = []; // Return an empty array
+			$scope.articles = articlesList; // Return an empty array
 		})
 		.then(function(response){
 			console.log(response);		
 			   $scope.articles = angular.fromJson(response.data);
+			   $scope.articleComments = $scope.articles[0].comments;
 		}).finally(function(){
 			console.log('Get Comments Done!');
 		});
 	$scope.users = usersList;
 	$scope.usersfilter = '';
-	$scope.articleComments = [];
-	/*$http.get('/api/comments',{responseType:'json'})
-		.success(function(data, status, headers, config) {
-			$scope.articleComments = angular.fromJson(data);
-		})
-		.error(function(data, status, headers, config) {
-			// called asynchronously if an error occurs or server returns response with an error status.
-			console.log('Oops an error occurse will looking to get the articles list!', data);
-		})
-		.then(function(response){
-			console.log(response);		
-		}).finally(function(){
-			console.log('Get Comments Done!');
-		});*/
 
     $scope.newComment = new Object();
     $scope.newComment.message = '';
