@@ -104,6 +104,10 @@ app.controller('blogCtrl',['$scope', '$http', 'menuItems', 'articlesList','users
 			$scope.articles[$scope.article.index].comments = $scope.articleComments;
 			console.log(arRight);
 	};
+        $scope.newComment.edit = function (idx) {
+                $scope.articles[$scope.article.index].comments = $scope.articleComments;
+                return true;
+         };
 	$scope.newComment.isAuthor = function(){
 			if(this.authore && $scope.user.Info.id && this.authore == $scope.user.Info.id) 
 				return true;
