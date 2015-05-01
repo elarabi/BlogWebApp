@@ -47,7 +47,7 @@ app.controller('blogCtrl',['$scope', '$http', 'menuItems', 'articlesList','users
     $scope.menuItems = menuItems;
     $scope.articles = [];//articlesList;
 	$scope.articleComments = [];
-//Get data from the server and set the articles!
+   //Get data from the server and set the articles!
    $http.get('/api/articles',{responseType:'json'})
 		.success(function(data, status, headers, config) {
 			$scope.articles = angular.fromJson(data);
@@ -61,9 +61,8 @@ app.controller('blogCtrl',['$scope', '$http', 'menuItems', 'articlesList','users
 		.then(function(response){
 			console.log(response);		
 			   $scope.articles = angular.fromJson(response.data);
-			   $scope.articleComments = $scope.articles[0].comments;
 		}).finally(function(){
-			console.log('Get Comments Done!');
+			console.log('HTTP-Get Articles Done!');
 		});
 	$scope.users = usersList;
 	$scope.usersfilter = '';
@@ -71,17 +70,23 @@ app.controller('blogCtrl',['$scope', '$http', 'menuItems', 'articlesList','users
     $scope.newComment = new Object();
     $scope.newComment.message = '';
     $scope.newComment.save= function(){
+		if(!this.message || this.message.trim() == '' ) {
+			$scope.newComment.isValid = false;
+			return false;
+		} else {
+			$scope.newComment.isValid = true;
+		}
 		var usr = $scope.user.Info.id;
-		var idx = $scope.article.index;
+		var idx = $scope.article.index;//$scope.article.index
 		
 		var artComments = $scope.articles[idx].comments;
 
 		var msg = this.message + '(By #' + usr + 'On #' + idx + ')';
         
-		$scope.articleComments.push({message:msg, author:usr});
+		$scope.articles[idx].comments.push({message:msg, author:usr});
+		$scope.article.Details.comments.push({'message': msg, 'author': usr});
 		
-		artComments.push({'message': msg, 'author': usr});
-		
+		this.message = ''; 
 		console.log($scope.articles[idx].comments);
     };
 	$scope.newComment.del= function(idx){
@@ -93,7 +98,7 @@ app.controller('blogCtrl',['$scope', '$http', 'menuItems', 'articlesList','users
 			$scope.articles[$scope.article.index].comments = $scope.articleComments;
 			console.log(arRight);
 	};
-        $scope.newComment.edit = function (idx) {
+    $scope.newComment.edit = function (idx) {
                 $scope.articles[$scope.article.index].comments = $scope.articleComments;
                 return true;
          };
@@ -116,7 +121,7 @@ app.controller('blogCtrl',['$scope', '$http', 'menuItems', 'articlesList','users
 //User Model
     $scope.user = new Object();
     //Default user is the guest
-    $scope.user.Info = $scope.users[0];
+    $scope.user.Info = $scope.users[2];
     $scope.user.isWriter = function(){
             if( this.Info && this.Info.role === 'writer')
                 return true;
@@ -131,7 +136,8 @@ app.controller('blogCtrl',['$scope', '$http', 'menuItems', 'articlesList','users
             return false;
     };
     $scope.user.isOwner = function(post){
-            if( this.Info && this.Info.role === 'writer' && this.Info.id === post.author) 
+		    if(!post || !post.author) return false;
+            if(this.Info && this.Info.role === 'writer' && this.Info.id === post.author) 
               {return true} 
             else {
                 return false;
@@ -139,8 +145,9 @@ app.controller('blogCtrl',['$scope', '$http', 'menuItems', 'articlesList','users
         };
         
     $scope.user.set = function(idx){
-        this.Info = angular.copy($scope.users[idx]);
-        console.log('Showing User IDX= ',this.Info);
+		$scope.user.index = idx;
+        $scope.user.Info = angular.copy($scope.users[idx]);
+        //console.log('Showing User IDX= ',this.Info);
     };
     $scope.article.set = function(idx){
 		this.index = idx;
@@ -156,8 +163,7 @@ app.controller('blogCtrl',['$scope', '$http', 'menuItems', 'articlesList','users
     $scope.article.show = function(idx){
         this.index = idx; 
         this.Details = angular.copy($scope.articles[idx]);//angular.copy(post);//
-        $scope.articleComments = this.Details.comments;
-        console.log('Showing article details....of #'+idx, $scope.article);
+        console.log('Showing article details....of #'+idx, $scope.article.Details.comments);
      };
     $scope.article.add = function(){
 		   this.index = $scope.articles.length;
@@ -165,23 +171,22 @@ app.controller('blogCtrl',['$scope', '$http', 'menuItems', 'articlesList','users
 		   var today = dt.getFullYear()+ '-' + dt.getMonth()+ '-' + dt.getDate();
 
 		   var newPost = {title: $scope.article.Details.title, 
-   	                               url: '/article/'+(this.index * 100),
-                           publishedon: today,
-                                author: $scope.user.Info.id,
-			                  contents: $scope.article.Details.contents,
-                              comments: []
+   	                        url: '/article/'+(this.index * 100),
+                    publishedon: today,
+                         author: $scope.user.Info.id,
+			           contents: $scope.article.Details.contents,
+                       comments: []
                   	       };
-   	       $scope.articles.push(newPost);
-		   $scope.articleComments = newPost.comments;;
-		   
+   	       $scope.articles.unshift(newPost);
+		   $scope.article.show(this.index);
     	console.log('Add Article Function...#'+this.index);
     };
     
     $scope.article.edit = function(){
 		var idx = this.index;
-		if($scope.articles[idx ]){
-			$scope.articles[idx ].title = $scope.article.Details.title;
-			$scope.articles[idx ].contents = $scope.article.Details.contents;
+		if($scope.articles[idx]){
+			$scope.articles[idx].title = $scope.article.Details.title;
+			$scope.articles[idx].contents = $scope.article.Details.contents;
 		}
 		 
 		console.log('Edit Function...');
@@ -198,13 +203,12 @@ app.controller('blogCtrl',['$scope', '$http', 'menuItems', 'articlesList','users
 
 			$scope.article.clear();
 
-			
 			console.log('Del Article Function...#'+	idx);
-		
 		};
     
     $scope.article.clear = function(){
         console.log('Clear Function..');
+
         this.Details = {title: 'N/S', 
                           url: '',
                   publishedOn: '', 
@@ -216,5 +220,29 @@ app.controller('blogCtrl',['$scope', '$http', 'menuItems', 'articlesList','users
 		this.index = $scope.articles.length;
 		};
 	
+}]);
+
+app.config(['$routeProvider', function ($routeProvider) {
+    $routeProvider
+      .when('/home', {
+        templateUrl: '/public/html/home.php',
+        controller: 'blogCtrl'
+      })
+      .when('/about', {
+        templateUrl: '/public/html/about.php',
+        controller: 'blogCtrl'
+      })
+      .when('/contact', {
+        templateUrl: '/public/html/contact.php',
+        controller: 'blogCtrl'
+       })///user/:
+       .when('#/user/:id',{
+       template:'<h4>#{{user.Info.id}}Welcome! {{user.Info.name}}</h4>',
+       controller: 'blogCtrl'
+       })
+      .when('/', {
+       template:'<div></div>',
+        controller: 'blogCtrl'
+      }).otherwise({redirectTo:'/'});
 }]);
 

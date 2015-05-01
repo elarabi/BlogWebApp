@@ -20,8 +20,10 @@
    <nav class="navbar navbar-default navbar-static-top" data-role="navigation">
      <ul class="nav nav-pills navbar-right">
         <li data-ng-repeat="item in menuItems" data-ng-show="{{item.isActive}}"><a href={{item.url}}><i class="{{item.icon}}"></i> {{item.title}}</a></li>
+		
      </ul>
    </nav>
+<div class="text-right"><b>#{{user.Info.id}}Welcome! {{user.Info.name}}</b></div>   
 </header>
 <div class="row app-container">
 <aside class="col-lg-3 pull-left">
@@ -31,20 +33,32 @@
  <li  class="list-group-item" data-ng-repeat="art in articles">
      <i class="glyphicon glyphicon-flag" ng-show="user.isOwner(art)"></i>
      <a href="#" data-ng-click="article.show($index)">{{art.publishedon}} {{art.title}}</a>
+	 
  </li>
  <li  class="list-group-item" data-ng-show="articles.length <1 ">Sorry There is No Article Published at this time!!</li>
 </ul>
     </div>
 </aside>
-<div class="col-lg-6"> 
+<div class="col-lg-6 pull-left"> 
+     <div class="ng-view"></div>
 	<?php include 'frm.article.php'; ?>
-     
+     	<div class="panel panel-primary">
+       <h3 class="panel-heading">
+	   <span class="panel-title"><i class="glyphicon glyphicon-comment"></i>Comment on this Post</span>
+	   </h3>
+	   <div class="panel-body list-group">
+       <textarea data-ng-model="newComment.message" class="input-element-lg" cols="60" rows="3" required></textarea><br>
+       <span class="btn btn-primary" data-ng-click="newComment.save()"><i class="glyphicon glyphicon-send"></i>Send</span>
+	   <span class="text-danger" data-ng-show="newComment.isValid === false ">Comment is required</span>
+	   </div>
+    </div>
+
     <div class="panel panel-primary">
         <h3 class="panel-heading">
-		<span class="panel-title"><i class="glyphicon glyphicon-comment"></i> Comments{{articleComments.length}}</span>
+		<span class="panel-title"><i class="glyphicon glyphicon-comment"></i> {{article.Details.comments.length}} &nbsp; Comments</span>
 		</h3>
         <ul  class="panel-body list-group">
-            <li  class="list-group-item" data-ng-repeat="comment in articleComments">
+            <li  class="list-group-item" data-ng-repeat="comment in article.Details.comments">
             	<p  ng-hide="comment.editor">
 			<span><i class="glyphicon glyphicon-trash" ng-show="comment.author == user.Info.id || article.Details.author == user.Info.id" ng-click="newComment.del($index)"></i>  
 			<i class="glyphicon glyphicon-pencil" ng-show="comment.author == user.Info.id" ng-click="comment.editor = true"></i>
@@ -55,11 +69,9 @@
 		    <input type=text  ng-model="comment.message" class="form-control input-element-lg" style="width:100%;"><span class="input-group-addon"><i class="glyphicon glyphicon-ok" ng-click="comment.editor = !newComment.edit($index)"></i></span>
 		 </p>
 	    </li>
-            <li class="list-group-item" data-ng-show="(!articleComments || articleComments.length < 1) && article.Details.id >0 ">Be the first commenting this article!!!!</li>
+            <li class="list-group-item" data-ng-show="(!article.Details.comments || article.Details.comments.length < 1) && article.Details.id >0 ">Be the first commenting this article!!!!</li>
         </ul>
     </div>
-
-
 </div>
 <aside class="col-lg-3 pull-right">
     <div class="panel panel-primary ">
@@ -77,15 +89,6 @@
                 <i class="glyphicon glyphicon-user" ng-show="usr.id == user.Info.id"></i><a href="#/user/:{{usr.id}}" data-ng-click="user.set($index)">{{usr.name}} {{usr.role}}</a>
             </li>
         </ul>
-    </div>
-	<div class="panel panel-primary">
-       <h3 class="panel-heading">
-	   <span class="panel-title"><i class="glyphicon glyphicon-comment"></i>Comment on this Post</span>
-	   </h3>
-	   <div class="panel-body list-group">
-       <textarea data-ng-model="newComment.message" class="input-element-message" cols=35 rows=5 required></textarea>
-       <span class="btn btn-primary" data-ng-click="newComment.save()"><i class="glyphicon glyphicon-send"></i>Send</span>
-	   </div>
     </div>
 
 
