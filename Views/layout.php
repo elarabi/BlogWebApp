@@ -33,7 +33,7 @@
  <li  class="list-group-item" data-ng-repeat="art in articles">
      <i class="glyphicon glyphicon-flag" ng-show="user.isOwner(art)"></i>
      <a href="#" data-ng-click="article.show($index)">{{art.publishedon}} {{art.title}}</a>
-	 
+	 <i class="glyphicon glyphicon-eye-open" ng-show="{{art.id}} == article.Details.id"></i>
  </li>
  <li  class="list-group-item" data-ng-show="articles.length <1 ">Sorry There is No Article Published at this time!!</li>
 </ul>
