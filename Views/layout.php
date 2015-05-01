@@ -31,8 +31,9 @@
         <h3 class="panel-heading" ><span class="panel-title"><i class="glyphicon glyphicon-list-alt"></i> Articles <span>{{articles.length}}</span></span></h3>
 <ul  class="panel-body list-group">
  <li  class="list-group-item" data-ng-repeat="art in articles">
-     <i class="glyphicon glyphicon-flag" ng-show="user.isOwner(art)"></i>
-     <a href="#" data-ng-click="article.show($index)">{{art.publishedon}} {{art.title}}</a>
+   <i class="glyphicon glyphicon-flag" ng-show="user.isOwner(art)"></i>
+   <a href="#" data-ng-click="article.show($index)">{{art.publishedon}} {{art.title}}</a>
+   <i class="glyphicon glyphicon-sunglasses" ng-show="{{art.id }}== article.Details.id"></i>
 	 
  </li>
  <li  class="list-group-item" data-ng-show="articles.length <1 ">Sorry There is No Article Published at this time!!</li>
