@@ -91,15 +91,15 @@ app.controller('blogCtrl',['$scope', '$http', 'menuItems', 'articlesList','users
     };
 	$scope.newComment.del= function(idx){
 			console.log(' Delete Comment  : ' + idx) 
-			var arLeft = $scope.articleComments.slice(0, idx );
-			var arRight = $scope.articleComments.slice(idx+1, $scope.articleComments.length+1);
-			$scope.articleComments = arLeft.concat(arRight);
+			var arLeft = $scope.article.Details.comments.slice(0, idx );
+			var arRight = $scope.article.Details.comments.slice(idx+1, $scope.article.Details.comments.length+1);
+			$scope.article.Details.comments = arLeft.concat(arRight);
 
-			$scope.articles[$scope.article.index].comments = $scope.articleComments;
+			$scope.articles[$scope.article.index].comments = $scope.article.Details.comments;
 			console.log(arRight);
 	};
     $scope.newComment.edit = function (idx) {
-                $scope.articles[$scope.article.index].comments = $scope.articleComments;
+                $scope.articles[$scope.article.index].comments = $scope.article.Details.comments;
                 return true;
          };
 	$scope.newComment.isAuthor = function(){
