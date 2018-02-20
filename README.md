@@ -6,6 +6,7 @@ Blog Web App as a Sample MVC-Project
 
 Create a simple blog web app using whatever languages, frameworks and testing suites you wish. Use an SCM
 tool such as git or mercurial to keep track of your changes and keep it with the source you provide to us.
+Live demos can be viewed at http://blogwebapp.it4br.com 
 
 ##Done when
 * Users
@@ -15,6 +16,7 @@ tool such as git or mercurial to keep track of your changes and keep it with the
 * Posts can be created, updated and deleted by owner
 * Posts can be read by anyone
 * Posts can be commented on
+
 ###Comments
 * Newly created comments by poster appear without post page without reloading
 * Comments can be updated and deleted by comment author
@@ -23,7 +25,7 @@ tool such as git or mercurial to keep track of your changes and keep it with the
 * Displays a list of all posts, categorized by date
 
 ###Notes
-* This code is meant to be a first impression of you as a developer.
+* This code is meant to be a one-page app developement.
 * Do not rush
 * Do not cut corners
 * Utilize best practices
