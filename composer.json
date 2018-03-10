@@ -1,0 +1,12 @@
+{
+ "name": "elarabi/BlogWebApp",
+ "description": "One page Blog Web Application",
+ "authors":[
+   { "name":"El ARabi Rhomari",
+     "email":"elarabi.hgc@gmail.com",
+     "homepage": "https://www.it4br.com",
+     "role": "Web App Developer"
+   }
+],
+ "license":"proprietary"
+}
